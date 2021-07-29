@@ -30,4 +30,9 @@ public class Magazine extends Item {
     public void borrow() {
         System.out.println("Borrow magazine under specific rules.");
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + ", " + publishingMonth + ", " + publishingYear;
+    }
 }

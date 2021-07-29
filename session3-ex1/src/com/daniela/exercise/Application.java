@@ -21,16 +21,46 @@ import java.util.*;
     book
     Please type the details of the item:
     547856/One hundred years of solitude/Gabriel Garcia Marquez
+
+    Please type a command:
+    add
+    Please type the item type you want to add:
+    magazine
+    Please type the details of the item:
+    547856/National Geographic/6/2021
+
     Please type a command:
     view
     47856/One hundred years of solitude/Gabriel Garcia Marquez
     47856/One hundred years of solitude/Gabriel Garcia Marquez
+
     Please type a command:
     exit
 
  */
 public class Application {
     public static void main(String[] args) {
+        Notification[] notifications = new Notification[2];
+        int index = 0;
+        if(index < notifications.length) {
+            notifications[index] = new SmsNotification();
+            index++;
+        }
+        if(index < notifications.length) {
+            notifications[index] = new EmailNotification();
+            index++;
+        }
+        if(index < notifications.length) {
+            notifications[index] = new SmsNotification();
+            //would throw an ArrayIndexOutOfBoundsException if index = 2
+            index++;
+        }
+        Library library = new Library(notifications);
+
+//        Scanner scanner = null;
+//        if Scanner is null, scanner.nextLine() would throw NullPointerException
+//        we should see why the scanner was null and fix the cause of the problem
+
         Scanner scanner = new Scanner(System.in);
         String line = "";
         while(true) {
@@ -40,9 +70,61 @@ public class Application {
             switch(line) {
                 case "add" :
                     //add item
+                    System.out.println("Please type the item type you want to add (book or magazine):");
+                    line = scanner.nextLine();
+                    switch(line) {
+                        case "book" : {
+                            System.out.println("Please type the details of the item:");
+                            line = scanner.nextLine();
+                                String[] values = line.split("/");
+                                if (values.length != 3) {
+                                    System.out.println("You must type 3 details for a book.");
+                                } else {
+                                    String code = values[0];
+                                    String title = values[1];
+                                    String author = values[2];
+                                    Item book = new Book(code, title, author); //polimorfism
+                                    try {
+                                        library.addItem(book);
+                                    } catch(TooManyItemsException e) {
+                                        //code to handle the exception
+                                        //code that will tell the app what to do if a TooManyItemsException occurs
+                                        System.out.println(e.getMessage());
+                                    }
+                                }
+                            }
+                            break;
+                        case "magazine" : {
+                            System.out.println("Please type the details of the item:");
+                            line = scanner.nextLine();
+                                String[] values = line.split("/");
+                                if(values.length != 4) {
+                                    System.out.println("You must type 4 details for a magazine.");
+                                } else {
+                                    String code = values[0];
+                                    String title = values[1];
+                                    int publishingMonth = Integer.valueOf(values[2]);
+                                    int publishingYear = Integer.valueOf(values[3]);
+                                    Item magazine = new Magazine(code, title, publishingMonth, publishingYear);
+                                    try {
+                                        library.addItem(magazine);
+                                        //...
+                                    } catch(TooManyItemsException e) {
+                                        System.out.println(e.getMessage());
+                                    } catch(Exception e) {
+                                        System.out.println("There was a problem with the app.");
+                                    } finally {//finally is optional
+                                        System.out.println("Finished the attempt to add an item.");
+                                    }
+                                }
+                            }
+                            break;
+                        default : System.out.println("This item type does not exists - " + line);
+                    }
                     break;
                 case "view" :
                     //view all items
+                    library.viewItems();
                     break;
                 case "exit" :
                     //stop the app

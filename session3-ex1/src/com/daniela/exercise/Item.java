@@ -26,4 +26,9 @@ public abstract class Item { //abstract applied on a class -> the class cannot b
     }
 
     public abstract void borrow(); //a method without implementation
+
+    @Override
+    public String toString() {
+        return code + ", " + title;
+    }
 }

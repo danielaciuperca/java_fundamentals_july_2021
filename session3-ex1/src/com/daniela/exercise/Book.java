@@ -27,4 +27,9 @@ public /*abstract*/ class Book extends Item {
     public void borrow() {
         System.out.println("Borrow book under the specific rules.");
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + ", " + author;
+    }
 }
