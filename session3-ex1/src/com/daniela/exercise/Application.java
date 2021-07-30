@@ -1,5 +1,6 @@
 package com.daniela.exercise;
 
+import java.io.*;
 import java.util.*;
 
 /*
@@ -110,7 +111,7 @@ public class Application {
                                         library.addItem(magazine);
                                         //...
                                     } catch(TooManyItemsException e) {
-                                        System.out.println(e.getMessage());
+                                        logTooManyItemsException(e);
                                     } catch(Exception e) {
                                         System.out.println("There was a problem with the app.");
                                     } finally {//finally is optional
@@ -134,5 +135,21 @@ public class Application {
                 default : System.out.println("This command does not exist.");
             }
         }
+    }
+
+    private static void logTooManyItemsException(TooManyItemsException e) {
+        PrintWriter printWriter = null;
+        try {
+            printWriter = new PrintWriter("logs.txt");
+            printWriter.println(e.getMessage());
+            printWriter.flush();
+        } catch (FileNotFoundException fileNotFoundException) {
+            fileNotFoundException.printStackTrace();
+        } finally {
+            if(printWriter != null) {
+                printWriter.close();
+            }
+        }
+//     e.printStackTrace();
     }
 }
